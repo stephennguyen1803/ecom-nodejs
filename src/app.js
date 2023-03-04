@@ -9,8 +9,11 @@ const compression = require('compression')
 //--------- init middlewares
 app.use(morgan("dev")) // morgan("combined") -> nen su dung o mode PRODUCTION / morgan("common") thong bao thieu thong tin / morgan("short") / morgan("tiny")
 app.use(helmet()) // bao ve thong tin rieng tu
-app.use(compression()) //giam tai bang thong
+app.use(compression()) //giam tai băng thông
 //--------- init database
+require('./db/init.mongodb')
+const { checkOverLoad } = require('./helper/check.connect')
+checkOverLoad()
 
 //--------- init router
 app.get('/', (req, res, next) => {
