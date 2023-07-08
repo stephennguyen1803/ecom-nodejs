@@ -1,15 +1,15 @@
 'use strict'
 
-const {model, Schema, Types} = required('mongoose')
+const {model, Schema, Types} = require('mongoose')
 
-const DOCUMENT_NAME = 'shop'
+const DOCUMENT_NAME = 'Shop'
 const COLLECTION_NAME = 'Shops'
 
 //!dmbg
 
 
 // Declare the Schema of the Mongo model
-var shoopSchema = new mongoose.Schema({
+var shoopSchema = new Schema({
     name:{
         type:String,
         required:true,
@@ -44,4 +44,4 @@ var shoopSchema = new mongoose.Schema({
 });
 
 //Export the model
-module.exports = mongoose.model(DOCUMENT_NAME, userSchema);
+module.exports = model(DOCUMENT_NAME, shoopSchema);

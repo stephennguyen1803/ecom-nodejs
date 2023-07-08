@@ -12,6 +12,10 @@ const compression = require('compression')
 app.use(morgan("dev")) // morgan("combined") -> nen su dung o mode PRODUCTION / morgan("common") thong bao thieu thong tin / morgan("short") / morgan("tiny")
 app.use(helmet()) // bao ve thong tin rieng tu
 app.use(compression()) //giam tai băng thông
+app.use(express.json())
+app.use(express.urlencoded({
+    extended: true
+}))
 //--------- init database
 require('./db/init.mongodb')
 const { checkOverLoad } = require('./helper/check.connect')
