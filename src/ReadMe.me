@@ -3,4 +3,11 @@ Section 5:
 ## Bước 1: Khởi tạo trong models file keytoken.model có nhiệm vụ define các thông tin cần thiết của shop.
 Ở đây chính là là bảng Key bao gồm các thuộc tính như là userId (lưu Id của shop), public_token lưu trữ thông tin token của shop
 refersh_token được sử dụng để khởi tạo lại public_token
-## Bước 2: Khởi tạo một service mới có tênl à keytoken.service
+## Bước 2: Khởi tạo một service mới có tên là keytoken.service. 
+(Lưu ý là oublicKey là kiểu buffer được sinh ra bởỉ thuật toán bất đối xứng nên cần convert sang kiểu string để lưu vào DB)
+
+Tổng kết Quá trình học Section 5:
+###1) Quá trình đăng ký của shop
+###2) Cách sử dụng JWT (RSA) để tạo public key và private key sử dụng để so sánh dữ liệu
+###3) JWT lưu file pem vào db
+
