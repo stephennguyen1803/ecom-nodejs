@@ -13,7 +13,7 @@ class Database {
         this.connect()
     }
 
-    // connect
+    // connect mongodb and set the poolsize - we can check the connection sleep - it that mean we have pool connection
     connect(type = 'mongodb') {
         if (1 === true) {
             mongoose.set('debug', true)

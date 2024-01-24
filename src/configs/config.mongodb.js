@@ -46,5 +46,5 @@ const pro = {
     }
 }
 const config = {local, dev, pro}
-const env = process.env.NODE_EVN || 'local'
+const env = process.env.NODE_ENV || 'local'
 module.exports = config[env]
