@@ -15,9 +15,10 @@ const RoleShop = {
 }
 
 class AccessService {
+    //using static method we call it without create instance
     static signUp = async ({name, email, password}) => {
         try {
-            // step 1: check email exists ??
+            // step 1: check email exists ?? also we use lean() to return plain object.
             
             const hoderShop = await shopModel.findOne({email}).lean()
             if (hoderShop) {
@@ -26,7 +27,7 @@ class AccessService {
                     message: 'Shop already registered'
                 }
             }
-
+            // step 2: hash password. Limit 10 to hash password
             const passwordHash = await bycrypt.hash(password, 10)
     
             const newShop = await shopModel.create({

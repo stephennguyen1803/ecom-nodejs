@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const {db: {host, port, name}} = require('../configs/config.mongodb')
 
 const connectString = `mongodb://${host}:${port}/${name}`
-console.log(connectString)
 const { countConnect } = require('../helper/check.connect')
 
 
@@ -20,12 +19,12 @@ class Database {
             mongoose.set('debug', {color: true})
         }
         mongoose.connect( connectString, {
-            maxPoolSize: 50
+            maxPoolSize: 10
         }).then(_ => {
             countConnect()
             console.log(`Connected Mongodb Success !!!`)
         })
-        .catch( err => console.log(`Error Connect!!!`))
+        .catch( err => console.log(`Error Connect!!!`,err))
     }
 
     //Ap dung design parten Singleton khi khoi tao connection

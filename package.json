@@ -24,14 +24,14 @@
     "stable": "^0.1.8"
   },
   "devDependencies": {
-    "bcrypt": "^5.1.0",
+    "bcrypt": "^5.1.1",
     "compression": "^1.7.4",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.0",
     "helmet": "^6.2.0",
     "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.21",
-    "mongoose": "^7.0.0",
+    "mongoose": "^7.6.8",
     "morgan": "^1.10.0"
   }
 }
