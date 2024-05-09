@@ -1,4 +1,4 @@
-@url_local = http://localhost:3052/v1/api/
+@url_local = http://127.0.0.1:3052/v1/api/
 ### signup
 POST {{url_local}}shop/signup
 Content-Type: application/json
