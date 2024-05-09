@@ -49,6 +49,7 @@ class AccessService {
                 //     }
                 // })
                 // PKSC1 public key cryptographic standard 1
+                // PEM Privacy Enhanced Mail
                 //console.log({privateKey, publicKey}) // save collection KeyStore
                 /* END Processing flowling JWT process */
 
@@ -69,7 +70,7 @@ class AccessService {
                     }
                 }
 
-                // const publicKeyObject = crypto.createPublicKey(publicKeyString)
+                // const publicKeyObject = crypto.createPublicKey(publicKeyString) in here publicKeyString has been change to keyStore
 
                 //created token pair
                 const tokens = await createTokenPair({userId: newShop._id, email}, 
