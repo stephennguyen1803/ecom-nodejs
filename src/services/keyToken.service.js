@@ -10,7 +10,7 @@ class KeyTokenService {
             console.log(`PublicKey To Save in DB::`,publicKey)
             const tokens = await keytokenModel.create({
                 user: userId,
-                publicKey: publicKey
+                publicKey: publicKeyString
             })
 
             return tokens ? tokens.publicKey : null

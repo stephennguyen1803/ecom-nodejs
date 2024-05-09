@@ -25,6 +25,7 @@ const apiKey = async (req, res, next) => {
         req.objectKey = objectKey
         return next()
     } catch (error) {
+        console.log('Error::',error)
         return error
     }
 }
