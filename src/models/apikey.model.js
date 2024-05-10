@@ -1,5 +1,6 @@
 'use strict'
 
+// this model use to define the schema of the apikey using for the access to the API
 const {Schema, model, Types} = require('mongoose')
 
 const DOCUMENT_NAME = 'Apikey'

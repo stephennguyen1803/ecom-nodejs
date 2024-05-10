@@ -40,9 +40,9 @@ const permission = (permission) => {
 
         console.log('Permissions::',req.objectKey.permissions)
         const validPermission = req.objectKey.permissions.includes(permission)
-        if(!req.objectKey.permissions) {
+        if(!validPermission) {
             return res.status(403).json({
-                message: 'Permission denied'
+                message: 'You did not have permission'
             })
         }
 

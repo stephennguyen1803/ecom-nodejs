@@ -2,7 +2,7 @@
 ### signup
 POST {{url_local}}shop/signup
 Content-Type: application/json
-x-api-key: f4c4c7c9e6f6026871577ed5673ad3d27a430398d0e0284fd1774e7c67d873e1a8c72e785ceefdc4cd3503e419c6dd5bdd81bc6ff244c23e4f226c406ce4dc73
+x-api-key: f61e9a0e40e4cd9d4608e5f71d987ddeb6784537b12619238a89700f8a282ec056d35ade6e6a69303424b03050004aa4fd2521b9bf5778fe0125282fdcfb0645
 
 {
     "name": "Shop_Dung1",
