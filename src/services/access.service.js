@@ -6,6 +6,7 @@ const crypto = require('crypto')
 const KeyTokenService = require("./keyToken.service")
 const { createTokenPair } = require("../auth/authUtils")
 const { getInfoData } = require("../utils")
+const { BadRequestError } = require("../core/error.response")
 
 const RoleShop = {
     SHOP: '01', //SHOP
@@ -17,15 +18,11 @@ const RoleShop = {
 class AccessService {
     //using static method we call it without create instance
     static signUp = async ({name, email, password}) => {
-        try {
+        // try {
             // step 1: check email exists ?? also we use lean() to return plain object.
-            
-            const hoderShop = await shopModel.findOne({email}).lean()
-            if (hoderShop) {
-                return {
-                    code: 'xxxx',
-                    message: 'Shop already registered'
-                }
+            const holderShop = await shopModel.findOne({email}).lean()
+            if (holderShop) {
+                throw new BadRequestError('Error: Shop already registered with this email.')
             }
             // step 2: hash password. Limit 10 to hash password
             const passwordHash = await bycrypt.hash(password, 10)
@@ -64,10 +61,7 @@ class AccessService {
                 })
 
                 if (!keyStore) {
-                    return {
-                        code: 'xxxx',
-                        message: 'keyStore error'
-                    }
+                    throw new BadRequestError('Error: KeyStore not created.')
                 }
 
                 // const publicKeyObject = crypto.createPublicKey(publicKeyString) in here publicKeyString has been change to keyStore
@@ -92,14 +86,14 @@ class AccessService {
                 metaData: null
             }
 
-        } catch(error) {
-            console.error('Error Sign Up with' , name, email, password)
-            return {
-                code: 'xxx',
-                message: error.message,
-                status: 'error'
-            }
-        }
+        // } catch(error) {
+        //     console.error('Error Sign Up with' , name, email, password)
+        //     return {
+        //         code: 'xxx',
+        //         message: error.message,
+        //         status: 'error'
+        //     }
+        // }
     }
 }
 
