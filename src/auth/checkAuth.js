@@ -8,26 +8,21 @@ const HEADER = {
 const {findById} = require("../services/apikey.service")
 
 const apiKey = async (req, res, next) => {
-    try {
-        const key = req.headers[HEADER.API_KEY]?.toString()
-        if(!key) {
-            return res.status(403).json({
-                message: 'Forbidden Error'
-            })
-        }
-        // Check object Key
-        const objectKey = await findById(key)
-        if (!objectKey) {
-            return res.status(403).json({
-                message: 'Forbidden Error Not Found Key'
-            })
-        }
-        req.objectKey = objectKey
-        return next()
-    } catch (error) {
-        console.log('Error::',error)
-        return error
+    const key = req.headers[HEADER.API_KEY]?.toString()
+    if(!key) {
+        return res.status(403).json({
+            message: 'x-api-key is required'
+        })
     }
+    // Check object Key
+    const objectKey = await findById(key)
+    if (!objectKey) {
+        return res.status(403).json({
+            message: 'Forbidden Error Not Found Key'
+        })
+    }
+    req.objectKey = objectKey
+    return next()
 }
 
 const permission = (permission) => {
@@ -50,6 +45,12 @@ const permission = (permission) => {
     }
 }
 
+const asyncMiddleware = (fn) => {
+    return (req, res, next) => {
+        fn(req, res, next).catch(next)
+    }
+}
+
 module.exports = {
-    apiKey, permission
+    apiKey, permission, asyncMiddleware
 }
