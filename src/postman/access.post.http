@@ -5,7 +5,7 @@ Content-Type: application/json
 x-api-key: f61e9a0e40e4cd9d4608e5f71d987ddeb6784537b12619238a89700f8a282ec056d35ade6e6a69303424b03050004aa4fd2521b9bf5778fe0125282fdcfb0645
 
 {
-    "name": "Shop_Dung1",
-    "email": "shopdung1@gmail.com",
+    "name": "Shop_Dung_4",
+    "email": "shopdung4@gmail.com",
     "password": "Admin@123"
 }
