@@ -7,5 +7,7 @@ const {asyncMiddleware} = require('../../auth/checkAuth')
 
 // signUp
 router.post('/shop/signup', asyncMiddleware(accessController.signUp))
+// Login
+router.post('/shop/login', asyncMiddleware(accessController.login))
 
 module.exports = router

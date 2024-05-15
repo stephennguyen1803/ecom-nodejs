@@ -6,7 +6,10 @@ const crypto = require('crypto')
 const KeyTokenService = require("./keyToken.service")
 const { createTokenPair } = require("../auth/authUtils")
 const { getInfoData } = require("../utils")
-const { BadRequestError } = require("../core/error.response")
+const { BadRequestError, AuthFailureError } = require("../core/error.response")
+
+// services
+const { findByEmail} = require("./shop.service")
 
 const RoleShop = {
     SHOP: '01', //SHOP
@@ -16,6 +19,50 @@ const RoleShop = {
 }
 
 class AccessService {
+
+    /**
+     * 1 - check email exists
+     * 2 - match password in db with password in request
+     * 3 - create AccessToken, RefreshToken and save
+     * 4 - generate tokens
+     * 5 - return tokens
+     * @param {string} email
+     */
+    static login = async ({email, password, refreshToken = null}) => {
+        const foundShop = await findByEmail({email})
+        console.log('Found Shop::', foundShop)
+        //1 
+        if (!foundShop) {
+            throw new BadRequestError('Error: Shop not found with this email.')
+        }
+
+        //2
+        const match = bycrypt.compare(password, foundShop.password)
+        if (!match) {
+            throw new AuthFailureError('Authenticate error!!!')
+        }
+
+        //3 
+        const publicKey = crypto.randomBytes(64).toString('hex')
+        const privateKey = crypto.randomBytes(64).toString('hex')
+        //4 generate tokens
+        const tokens = await createTokenPair({userId: foundShop._id, email}, publicKey, privateKey)
+        console.log(`Created Token Sucess::`, tokens)
+        await KeyTokenService.createKeyToken({
+            userId: foundShop._id,
+            publicKey: publicKey,
+            privateKey: privateKey,
+            refreshToken: tokens.refreshToken
+        })
+
+        return {
+            metaData: {
+                shop: getInfoData({fields: ['id', 'name', 'email'], object: foundShop}),
+                tokens
+            }
+        }
+    }
+
     //using static method we call it without create instance
     static signUp = async ({name, email, password}) => {
         // try {

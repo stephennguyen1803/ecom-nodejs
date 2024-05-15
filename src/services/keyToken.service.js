@@ -1,5 +1,6 @@
 'use strict'
 
+const { filter, update } = require("lodash")
 const keytokenModel = require("../models/keytoken.model")
 
 class KeyTokenService {
@@ -20,13 +21,22 @@ class KeyTokenService {
     } 
     END Function Save Data for JWT process
     */
-    static createKeyToken = async ({userId, publicKey, privateKey}) => {
+    static createKeyToken = async ({userId, publicKey, privateKey, refreshToken}) => {
         try {
-            const tokens = await keytokenModel.create({
-                user: userId,
-                publicKey: publicKey,
-                privateKey: privateKey
-            })
+            // level 0 - create tokens basicly
+            // const tokens = await keytokenModel.create({
+            //     user: userId,
+            //     publicKey: publicKey,
+            //     privateKey: privateKey
+            // })
+            //return tokens ? tokens.publicKey : null
+
+            // level 1 - create tokens with status
+            const filter = { user: userId }, update = { 
+                publicKey: publicKey, privateKey: privateKey, refreshTokensUsed: [], refreshToken}, 
+                options = { new: true, upsert: true }
+            const tokens = await keytokenModel.findOneAndUpdate(filter, update, options)
+
             return tokens ? tokens.publicKey : null
         } catch (error) {
             return error
