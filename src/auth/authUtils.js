@@ -2,7 +2,7 @@
 
 const JWT = require('jsonwebtoken')
 const asyncHandler = require('../helper/asyncHandler')
-const { AuthFailureError, NotfoundError } = require('../core/error.response')
+const { AuthFailureError, NotFoundError } = require('../core/error.response')
 
 //Service 
 const {findByUserId} = require('../services/keyToken.service')
@@ -90,7 +90,7 @@ const authentication = asyncHandler(async (req, res, next) => {
     //2
     const keyStore = await findByUserId(userId)
     if (!keyStore) {
-        throw new NotfoundError('Not Found Key Store')
+        throw new NotFoundError('Not Found Key Store')
     }
 
     //3 Verfiy-token
@@ -113,7 +113,12 @@ const authentication = asyncHandler(async (req, res, next) => {
     }
 })
 
+const verifyToken = async (token, keySecret) => {
+    return await JWT.verify(token, keySecret)
+}
+
 module.exports = {
     createTokenPair,
-    authentication
+    authentication,
+    verifyToken
 }
