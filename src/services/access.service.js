@@ -4,9 +4,9 @@ const shopModel = require("../models/shop.model")
 const bycrypt = require('bcrypt')
 const crypto = require('crypto')
 const KeyTokenService = require("./keyToken.service")
-const { createTokenPair } = require("../auth/authUtils")
+const { createTokenPair, verifyToken } = require("../auth/authUtils")
 const { getInfoData } = require("../utils")
-const { BadRequestError, AuthFailureError } = require("../core/error.response")
+const { BadRequestError, AuthFailureError, ForbiddenError } = require("../core/error.response")
 
 // services
 const { findByEmail} = require("./shop.service")
@@ -19,6 +19,51 @@ const RoleShop = {
 }
 
 class AccessService {
+
+    /*
+        Check  this token used?
+    */
+   static handleRefreshToken = async ({refreshToken}) => {
+        // verify this token used?
+        console.log('[1] -- Refresh Token::', refreshToken)
+        const foundToken = await KeyTokenService.findByRefreshTokenUsed(refreshToken)
+        console.log('[2]---', foundToken)
+        if (foundToken) {
+            // decode what is user?
+            const {userId, email} = await verifyToken(refreshToken, foundToken.privateKey)
+            console.log({userId, email})
+
+            // delete all key token by userId
+            await KeyTokenService.deleteKeyById(userId)
+            throw new ForbiddenError('Something went wrong, please login again.')
+        }
+
+        //Not found token has been used
+        const holderToken = await KeyTokenService.findByRefreshToken(refreshToken)
+        console.log('[3]---', holderToken)
+        if (!holderToken) {
+            throw new AuthFailureError('Shop Not registered.')
+        }
+
+        //verify token
+        const {userId, email} = await verifyToken( refreshToken, holderToken.privateKey)
+        console.log('[4]---', {userId, email})
+        // check user Id
+        const foundShop = await findByEmail({email})
+        if (!foundShop) {
+            throw new AuthFailureError('Shop Not registered.')
+        }
+
+        // create new pair token
+        const tokens = await createTokenPair({userId: userId, email}, holderToken.publicKey, holderToken.privateKey)
+
+        //update token 
+        await KeyTokenService.updateKeyToken(holderToken, tokens.refreshToken, refreshToken)
+        return {
+            user: {userId, email},
+            tokens
+        }
+   }
 
     /**
      * 1 - check email exists
@@ -56,10 +101,8 @@ class AccessService {
         })
 
         return {
-            metaData: {
-                shop: getInfoData({fields: ['id', 'name', 'email'], object: foundShop}),
-                tokens
-            }
+            shop: getInfoData({fields: ['_id', 'name', 'email'], object: foundShop}),
+            tokens
         }
     }
 
