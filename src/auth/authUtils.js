@@ -8,8 +8,10 @@ const { AuthFailureError, NotFoundError } = require('../core/error.response')
 const {findByUserId} = require('../services/keyToken.service')
 
 const HEADER = {
+    APIKEY: 'x-api-key',
     CLIENT_ID: 'x-client-id',
-    AUTHORIZATION: 'authorization'
+    AUTHORIZATION: 'authorization',
+    REFRESHTOKEN: 'x-rtoken-id'
 }
 
 /* JWT process token pair
@@ -77,7 +79,8 @@ const authentication = asyncHandler(async (req, res, next) => {
     /*
         1 - Check userId is missing
         2 - get AccesstToken
-        3 - verify Token
+        3 - verify Token 
+        3 - verify RefreshToken
         4 - check user in database?
         5 - check keyStore with userID ?
         6 - Ok all => return next()
@@ -93,6 +96,23 @@ const authentication = asyncHandler(async (req, res, next) => {
         throw new NotFoundError('Not Found Key Store')
     }
 
+    //3 Verify RefreshToken
+    if (req.headers[HEADER.REFRESHTOKEN]) {
+        try {
+            const refreshToken = req.headers[HEADER.REFRESHTOKEN]
+            const decodeUser = JWT.verify(refreshToken, keyStore.privateKey)
+            if (decodeUser.userId !== userId) {
+                throw new AuthFailureError('Invalid User Id')
+            }
+            req.keyStore = keyStore
+            req.refreshToken = refreshToken
+            req.user = decodeUser
+            return next()
+        } catch (error) {
+            throw error
+        }
+    }
+
     //3 Verfiy-token
     const accessToken = req.headers[HEADER.AUTHORIZATION]
     if (!accessToken) {
@@ -102,8 +122,8 @@ const authentication = asyncHandler(async (req, res, next) => {
     try {
         console.log('KeyStore::', keyStore)
         console.log('AccessToken::', accessToken)
-        const decode = JWT.verify(accessToken, keyStore.publicKey)
-        if (decode.userId !== userId) {
+        const decodeUser = JWT.verify(accessToken, keyStore.publicKey)
+        if (decodeUser.userId !== userId) {
             throw new AuthFailureError('Invalid User Id')
         }
         req.keyStore = keyStore
