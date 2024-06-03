@@ -1,7 +1,6 @@
 'use strict'
 
 const {model, Schema} = require('mongoose');
-const { schema } = require('./shop.model');
 const e = require('express');
 
 const DOCUMENT_NAME = 'Product'
@@ -16,7 +15,7 @@ const productSchema = new Schema({
     product_type:{type:String, required:true, enum:['Electronisc','Clothing', 'Funiture', 'Books', 'Others']},
     product_category:{type:String},
     product_shop:{type:Schema.Types.ObjectId, ref:'Shop', required:true},
-    product_attributes:{type:schema.Types.Mixed, required:true}
+    product_attributes:{type: Schema.Types.Mixed, required:true}
 }, {
     collection: COLLECTION_NAME,
     timestamps: true
@@ -43,7 +42,7 @@ const elactronicSchema = new Schema({
 });
 
 module.exports = {
-    Product: model(DOCUMENT_NAME, productSchema),
-    Clothing: model('Clothing', clothingSchema),
-    Electronic: model('Electronic', elactronicSchema)
+    product: model(DOCUMENT_NAME, productSchema),
+    clothing: model('Clothing', clothingSchema),
+    electronic: model('Electronic', elactronicSchema)
 }
