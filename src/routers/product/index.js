@@ -7,7 +7,7 @@ const {asyncMiddleware} = require('../../auth/checkAuth')
 const { authentication } = require('../../auth/authUtils')
 
 console.log('Product Router::')
-// authentication logout
+// authentication for product
 router.use(authentication)
 //console.log('Product Router::',router)
 router.post('', asyncMiddleware(productController.createProduct))
